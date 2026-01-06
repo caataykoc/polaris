@@ -28,6 +28,10 @@ This section provides information about how access control works for Apache Pola
 Polaris uses a role-based access control (RBAC) model in which the Polaris administrator assigns access privileges to catalog roles
 and then grants access to resources to principals by assigning catalog roles to principal roles.
 
+{{% alert title="Note" color="primary" %}}
+For advanced authorization scenarios requiring external policy management or integration with existing policy infrastructure, Polaris supports integration with external Policy Decision Points (PDPs) such as Open Policy Agent (OPA). See [External Policy Decision Point](../external-pdp/) for more information.
+{{% /alert %}}
+
 These are the key concepts to understanding access control in Polaris:
 
 - **Securable object**
@@ -102,18 +106,19 @@ To grant the full set of privileges (drop, list, read, write, etc.) on an object
 
 ### Table privileges
 
-| Privilege | Description |
-| --------- | ----------- |
-| TABLE_CREATE | Enables registering a table with the catalog. |
-| TABLE_DROP | Enables dropping a table from the catalog. |
-| TABLE_LIST | Enables listing any table in the catalog. |
-| TABLE_READ_PROPERTIES | Enables reading properties of the table. |
-| TABLE_WRITE_PROPERTIES | Enables configuring properties for the table. |
-| TABLE_READ_DATA | Enables reading data from the table by receiving short-lived read-only storage credentials from the catalog. |
-| TABLE_WRITE_DATA | Enables writing data to the table by receiving short-lived read+write storage credentials from the catalog. |
-| TABLE_FULL_METADATA | Grants all table privileges, except TABLE_READ_DATA and TABLE_WRITE_DATA, which need to be granted individually. |
-| TABLE_ATTACH_POLICY | Enables attaching policy to a table. |
-| TABLE_DETACH_POLICY | Enables detaching policy from a table. |
+| Privilege              | Description                                                                                                      |
+|------------------------|------------------------------------------------------------------------------------------------------------------|
+| TABLE_CREATE           | Enables registering a table with the catalog.                                                                    |
+| TABLE_DROP             | Enables dropping a table from the catalog.                                                                       |
+| TABLE_LIST             | Enables listing any table in the catalog.                                                                        |
+| TABLE_READ_PROPERTIES  | Enables reading properties of the table.                                                                         |
+| TABLE_WRITE_PROPERTIES | Enables configuring properties for the table.                                                                    |
+| TABLE_READ_DATA        | Enables reading data from the table by receiving short-lived read-only storage credentials from the catalog.     |
+| TABLE_WRITE_DATA       | Enables writing data to the table by receiving short-lived read+write storage credentials from the catalog.      |
+| TABLE_FULL_METADATA    | Grants all table privileges, except TABLE_READ_DATA and TABLE_WRITE_DATA, which need to be granted individually. |
+| TABLE_ATTACH_POLICY    | Enables attaching policy to a table.                                                                             |
+| TABLE_DETACH_POLICY    | Enables detaching policy from a table.                                                                           |
+| TABLE_REMOTE_SIGN      | Enables remote signing for a table. TABLE_READ_DATA and TABLE_WRITE_DATA must also be granted individually.      |
 
 ### View privileges
 

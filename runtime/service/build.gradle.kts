@@ -30,6 +30,7 @@ dependencies {
   implementation(project(":polaris-api-management-service"))
   implementation(project(":polaris-api-iceberg-service"))
   implementation(project(":polaris-api-catalog-service"))
+  implementation(project(":polaris-api-s3-sign-service"))
 
   runtimeOnly(project(":polaris-relational-jdbc"))
 
@@ -106,6 +107,8 @@ dependencies {
 
   implementation(libs.jakarta.servlet.api)
 
+  runtimeOnly(project(":polaris-async-vertx"))
+
   testFixturesApi(project(":polaris-tests")) {
     // exclude all spark dependencies
     exclude(group = "org.apache.iceberg", module = "iceberg-spark-3.5_2.12")
@@ -114,6 +117,7 @@ dependencies {
   }
 
   testImplementation(project(":polaris-api-management-model"))
+  testImplementation(project(":polaris-relational-jdbc"))
 
   testImplementation(project(":polaris-minio-testcontainer"))
 
@@ -131,6 +135,8 @@ dependencies {
   testImplementation("io.quarkus:quarkus-rest-client-jackson")
   testImplementation("io.quarkus:quarkus-jdbc-h2")
 
+  testImplementation("io.opentelemetry:opentelemetry-sdk-testing")
+
   testImplementation("io.rest-assured:rest-assured")
 
   testImplementation(platform(libs.testcontainers.bom))
@@ -146,7 +152,7 @@ dependencies {
 
   testImplementation(platform(libs.testcontainers.bom))
   testImplementation("org.testcontainers:testcontainers")
-  testImplementation("org.testcontainers:postgresql")
+  testImplementation("org.testcontainers:testcontainers-postgresql")
 
   testFixturesImplementation(project(":polaris-core"))
   testFixturesImplementation(project(":polaris-api-management-model"))

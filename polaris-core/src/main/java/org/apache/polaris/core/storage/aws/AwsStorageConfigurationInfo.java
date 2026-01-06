@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.annotation.Nullable;
 import java.net.URI;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.polaris.core.storage.PolarisStorageConfigurationInfo;
@@ -44,9 +45,9 @@ public abstract class AwsStorageConfigurationInfo extends PolarisStorageConfigur
     return ImmutableAwsStorageConfigurationInfo.builder();
   }
 
-  // Technically, it should be ^arn:(aws|aws-cn|aws-us-gov):iam::(\d{12}):role/.+$,
-  @JsonIgnore
-  public static final String ROLE_ARN_PATTERN = "^arn:(aws|aws-us-gov):iam::(\\d{12}):role/.+$";
+  // Technically, it should be ^arn:(aws|aws-cn|aws-us-gov):iam::(\d{12}):role/.+$, but we've
+  // generalized it to support non-aws S3 implementations
+  @JsonIgnore public static final String ROLE_ARN_PATTERN = "^.+:(.*):iam:.*:(.*):role/.+$";
 
   private static final Pattern ROLE_ARN_PATTERN_COMPILED = Pattern.compile(ROLE_ARN_PATTERN);
 
@@ -62,6 +63,14 @@ public abstract class AwsStorageConfigurationInfo extends PolarisStorageConfigur
 
   @Nullable
   public abstract String getRoleARN();
+
+  /** KMS Key ARN for server-side encryption,used for writes, optional */
+  @Nullable
+  public abstract String getCurrentKmsKey();
+
+  /** Comma-separated list of allowed KMS Key ARNs, optional */
+  @Nullable
+  public abstract List<String> getAllowedKmsKeys();
 
   /** AWS external ID, optional */
   @Nullable
@@ -159,10 +168,6 @@ public abstract class AwsStorageConfigurationInfo extends PolarisStorageConfigur
     }
     if (arn.isEmpty()) {
       throw new IllegalArgumentException("ARN must not be empty");
-    }
-    // specifically throw errors for China
-    if (arn.contains("aws-cn")) {
-      throw new IllegalArgumentException("AWS China is temporarily not supported");
     }
     checkArgument(Pattern.matches(ROLE_ARN_PATTERN, arn), "Invalid role ARN format: %s", arn);
   }

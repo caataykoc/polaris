@@ -40,11 +40,11 @@ val distributionElements by
 dependencies {
   implementation(project(":polaris-runtime-service"))
 
-  runtimeOnly(project(":polaris-eclipselink"))
   runtimeOnly("org.postgresql:postgresql")
   runtimeOnly(project(":polaris-relational-jdbc"))
   runtimeOnly("io.quarkus:quarkus-jdbc-postgresql")
   runtimeOnly(project(":polaris-extensions-federation-hadoop"))
+  runtimeOnly(project(":polaris-extensions-auth-opa"))
 
   if ((project.findProperty("NonRESTCatalogs") as String?)?.contains("HIVE") == true) {
     runtimeOnly(project(":polaris-extensions-federation-hive"))
@@ -72,7 +72,11 @@ quarkus {
   )
 }
 
-tasks.register("run") { dependsOn("quarkusRun") }
+tasks.register("run") {
+  group = "application"
+  description = "Runs the Apache Polaris server application"
+  dependsOn("quarkusRun")
+}
 
 tasks.named<QuarkusRun>("quarkusRun") {
   jvmArgs =

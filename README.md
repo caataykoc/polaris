@@ -40,7 +40,7 @@ for contribution guidelines.
 Click [here](https://polaris.apache.org/in-dev/unreleased/) for a quick overview of Polaris.
 
 ## Quickstart
-Click [here](https://polaris.apache.org/in-dev/unreleased/getting-started/install-dependencies/) for the quickstart experience, which will help you set up a Polaris instance locally or on any supported cloud provider.
+Click [here](https://polaris.apache.org/in-dev/unreleased/getting-started/) for the quickstart experience, which will help you set up a Polaris instance locally or on any supported cloud provider.
 
 ## Project Structure
 
@@ -52,7 +52,8 @@ Apache Polaris is organized into the following modules:
   - `polaris-api-management-service` - Polaris Management API service classes
   - `polaris-api-iceberg-service` - The Iceberg REST service classes
   - `polaris-api-catalog-service` - The Polaris Catalog API service classes
-  - Runtime modules:
+  - `polaris-api-s3-sign-service` - The Iceberg REST service for S3 remote signing
+- Runtime modules:
       - [`polaris-admin`](./runtime/admin/README.md) - The Polaris Admin Tool; mainly for bootstrapping persistence
       - [`polaris-runtime-defaults`](./runtime/defaults/README.md) - The runtime configuration defaults
       - [`polaris-distribution`](./runtime/distribution/README.md) - The Polaris distribution
@@ -61,7 +62,6 @@ Apache Polaris is organized into the following modules:
       - `polaris-runtime-spark-tests` - Integration tests for the Polaris Spark plugin
       - `polaris-runtime-test-common` - Test utilities
   - Persistence modules:
-      - `polaris-eclipselink` - The Eclipselink implementation of the MetaStoreManager interface (deprecated for removal)
       - `polaris-relational-jdbc` - The JDBC implementation of BasePersistence to be used via AtomicMetaStoreManager
   - Extensions modules:
       - `polaris-extensions-federation-hadoop` - The Hadoop federation extension
@@ -95,8 +95,9 @@ In addition to modules, there are:
 - [server-templates](./server-templates) - OpenAPI Generator templates to generate the server code
 - [site](./site/README.md) - The Polaris website
 
-## Building and Running
+Outside of this repository, there are several other tools that can be found in a separate [Polaris-Tools](https://github.com/apache/polaris-tools) repository.
 
+## Building and Running
 Apache Polaris is built using Gradle with Java 21+ and Docker 27+.
 
 - `./gradlew build` - To build and run tests. Make sure Docker is running, as the integration tests depend on it.

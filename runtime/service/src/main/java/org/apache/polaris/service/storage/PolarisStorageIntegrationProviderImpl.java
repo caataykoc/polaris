@@ -31,12 +31,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import org.apache.polaris.core.auth.PolarisPrincipal;
 import org.apache.polaris.core.config.RealmConfig;
-import org.apache.polaris.core.storage.AccessConfig;
 import org.apache.polaris.core.storage.PolarisStorageActions;
 import org.apache.polaris.core.storage.PolarisStorageConfigurationInfo;
 import org.apache.polaris.core.storage.PolarisStorageIntegration;
 import org.apache.polaris.core.storage.PolarisStorageIntegrationProvider;
+import org.apache.polaris.core.storage.StorageAccessConfig;
 import org.apache.polaris.core.storage.aws.AwsCredentialsStorageIntegration;
 import org.apache.polaris.core.storage.aws.AwsStorageConfigurationInfo;
 import org.apache.polaris.core.storage.aws.StsClientProvider;
@@ -53,13 +54,12 @@ public class PolarisStorageIntegrationProviderImpl implements PolarisStorageInte
   private final Optional<AwsCredentialsProvider> stsCredentials;
   private final Supplier<GoogleCredentials> gcpCredsProvider;
 
-  @SuppressWarnings("CdiInjectionPointsInspection")
   @Inject
   public PolarisStorageIntegrationProviderImpl(
       StorageConfiguration storageConfiguration, StsClientProvider stsClientProvider, Clock clock) {
     this(
         stsClientProvider,
-        Optional.ofNullable(storageConfiguration.stsCredentials()),
+        storageConfiguration.awsSystemCredentials(),
         storageConfiguration.gcpCredentialsSupplier(clock));
   }
 
@@ -109,13 +109,14 @@ public class PolarisStorageIntegrationProviderImpl implements PolarisStorageInte
         storageIntegration =
             new PolarisStorageIntegration<>((T) polarisStorageConfigurationInfo, "file") {
               @Override
-              public AccessConfig getSubscopedCreds(
+              public StorageAccessConfig getSubscopedCreds(
                   @Nonnull RealmConfig realmConfig,
                   boolean allowListOperation,
                   @Nonnull Set<String> allowedReadLocations,
                   @Nonnull Set<String> allowedWriteLocations,
+                  @Nonnull PolarisPrincipal polarisPrincipal,
                   Optional<String> refreshCredentialsEndpoint) {
-                return AccessConfig.builder().supportsCredentialVending(false).build();
+                return StorageAccessConfig.EMPTY;
               }
 
               @Override

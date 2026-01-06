@@ -27,6 +27,7 @@ import jakarta.ws.rs.core.SecurityContext;
 import org.apache.iceberg.catalog.TableIdentifier;
 import org.apache.polaris.core.PolarisDiagnostics;
 import org.apache.polaris.core.auth.PolarisAuthorizer;
+import org.apache.polaris.core.auth.PolarisPrincipal;
 import org.apache.polaris.core.catalog.ExternalCatalogFactory;
 import org.apache.polaris.core.config.FeatureConfiguration;
 import org.apache.polaris.core.config.RealmConfig;
@@ -92,15 +93,15 @@ public class GenericTableCatalogAdapter
       SecurityContext securityContext, String prefix) {
     FeatureConfiguration.enforceFeatureEnabledOrThrow(
         realmConfig, FeatureConfiguration.ENABLE_GENERIC_TABLES);
-    validatePrincipal(securityContext);
+    PolarisPrincipal principal = validatePrincipal(securityContext);
 
     return new GenericTableCatalogHandler(
         diagnostics,
         callContext,
         resolutionManifestFactory,
         metaStoreManager,
-        securityContext,
-        prefixParser.prefixToCatalogName(realmContext, prefix),
+        principal,
+        prefixParser.prefixToCatalogName(prefix),
         polarisAuthorizer,
         polarisCredentialManager,
         externalCatalogFactories);

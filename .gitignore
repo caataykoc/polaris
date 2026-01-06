@@ -30,7 +30,7 @@ client/python/poetry.lock
 /pyproject.toml
 client/python/.openapi-generator/
 client/python/docs/
-client/python/polaris/
+client/python/apache_polaris/sdk/
 client/python/test/
 !client/python/test/test_cli_parsing.py
 
@@ -106,3 +106,11 @@ hs_err_pid*
 
 # Python Virtual Env
 .venv
+venv
+
+# Development Experience
+
+# You can create runtime/defaults/src/main/resources/application-local.properties file
+# to override default properties for local development.
+# And then use `./gradlew run -Dquarkus.profile=local` to run Polaris with dev profile.
+application-local.properties

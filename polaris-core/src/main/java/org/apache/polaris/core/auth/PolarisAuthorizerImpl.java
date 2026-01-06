@@ -99,6 +99,7 @@ import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_MANAGE_GRANT
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_MANAGE_STRUCTURE;
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_READ_DATA;
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_READ_PROPERTIES;
+import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_REMOTE_SIGN;
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_REMOVE_PARTITION_SPECS;
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_REMOVE_PROPERTIES;
 import static org.apache.polaris.core.entity.PolarisPrivilege.TABLE_REMOVE_SNAPSHOTS;
@@ -127,7 +128,6 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
-import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -145,7 +145,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Performs hierarchical resolution logic by matching the transively expanded set of grants to a
+ * Performs hierarchical resolution logic by matching the transitively expanded set of grants to a
  * calling principal against the cascading permissions over the parent hierarchy of a target
  * Securable.
  *
@@ -462,6 +462,10 @@ public class PolarisAuthorizerImpl implements PolarisAuthorizer {
     SUPER_PRIVILEGES.putAll(
         VIEW_FULL_METADATA,
         List.of(CATALOG_MANAGE_CONTENT, CATALOG_MANAGE_METADATA, VIEW_FULL_METADATA));
+    SUPER_PRIVILEGES.putAll(
+        TABLE_REMOTE_SIGN,
+        List.of(
+            CATALOG_MANAGE_CONTENT, CATALOG_MANAGE_METADATA, TABLE_CREATE, TABLE_FULL_METADATA));
 
     // Catalog privileges
     SUPER_PRIVILEGES.putAll(
@@ -728,7 +732,6 @@ public class PolarisAuthorizerImpl implements PolarisAuthorizer {
 
   private final RealmConfig realmConfig;
 
-  @Inject
   public PolarisAuthorizerImpl(RealmConfig realmConfig) {
     this.realmConfig = realmConfig;
   }
@@ -867,7 +870,7 @@ public class PolarisAuthorizerImpl implements PolarisAuthorizer {
    * permissions matching {@code privilege} on any entity in the resolvedPath of the resolvedPath.
    *
    * <p>The caller is responsible for translating these checks into either behavioral actions (e.g.
-   * returning 404 instead of 403, checking other root privileges that supercede the checked
+   * returning 404 instead of 403, checking other root privileges that supersede the checked
    * privilege, choosing whether to vend credentials) or throwing relevant Unauthorized
    * errors/exceptions.
    */

@@ -161,6 +161,8 @@ public class CatalogEntity extends PolarisEntity implements LocationBasedEntity 
             .setRoleArn(awsConfig.getRoleARN())
             .setExternalId(awsConfig.getExternalId())
             .setUserArn(awsConfig.getUserARN())
+            .setCurrentKmsKey(awsConfig.getCurrentKmsKey())
+            .setAllowedKmsKeys(awsConfig.getAllowedKmsKeys())
             .setStorageType(StorageConfigInfo.StorageTypeEnum.S3)
             .setAllowedLocations(awsConfig.getAllowedLocations())
             .setRegion(awsConfig.getRegion())
@@ -274,13 +276,13 @@ public class CatalogEntity extends PolarisEntity implements LocationBasedEntity 
     }
 
     public Builder setDefaultBaseLocation(String defaultBaseLocation) {
-      // Note that this member lives in the main 'properties' map rather tha internalProperties.
+      // Note that this member lives in the main 'properties' map rather than internalProperties.
       properties.put(DEFAULT_BASE_LOCATION_KEY, defaultBaseLocation);
       return this;
     }
 
     public Builder setReplaceNewLocationPrefixWithCatalogDefault(String value) {
-      // Note that this member lives in the main 'properties' map rather tha internalProperties.
+      // Note that this member lives in the main 'properties' map rather than internalProperties.
       properties.put(REPLACE_NEW_LOCATION_PREFIX_WITH_CATALOG_DEFAULT_KEY, value);
       return this;
     }
@@ -308,6 +310,8 @@ public class CatalogEntity extends PolarisEntity implements LocationBasedEntity 
                 AwsStorageConfigurationInfo.builder()
                     .allowedLocations(allowedLocations)
                     .roleARN(awsConfigModel.getRoleArn())
+                    .currentKmsKey(awsConfigModel.getCurrentKmsKey())
+                    .allowedKmsKeys(awsConfigModel.getAllowedKmsKeys())
                     .externalId(awsConfigModel.getExternalId())
                     .region(awsConfigModel.getRegion())
                     .endpoint(awsConfigModel.getEndpoint())
